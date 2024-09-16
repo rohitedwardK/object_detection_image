@@ -1,0 +1,15 @@
+.output-image{
+    box-shadow: 0 3px 10px 3px #aaa;
+    border: 2px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    max-width: 100%;
+    object-fit: contain;
+    max-height: 650px;
+}
+
+.output-wrapper{
+    border-top: solid 1px #ddd;
+    margin-top: 10px;
+    padding-top: 10px;
+}

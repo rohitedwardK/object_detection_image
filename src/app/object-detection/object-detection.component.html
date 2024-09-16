@@ -1,0 +1,70 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h3>Object Detection</h3>
+            </div>
+            <div class="card-body"> 
+              <div class="row">
+                <div class="container">
+                    <div class="col-md-12">
+                        <form #uploadForm="ngForm">
+                            <div class="form-group">
+                                <input type="file" class="form-control-file" (change)="onFileSelected($event)" required />
+                                <button class="btn btn-primary" (click)="uploadImage()" type="submit">Upload Image</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-12">
+                        <div *ngIf="isLoading">Data Processing...</div>
+                        <div class="output-wrapper" *ngIf="imageSrc">
+                            <div class="processed-data">
+                                <h6 *ngIf="detectedObjects && imageSrc"> Detected Objects:</h6>
+                                <span *ngFor="let key of detectedObjects | keyvalue; let last = last">
+                                    {{ key.key }}: {{ key.value }}&nbsp;{{ last ? '' : ' | ' }} &nbsp;
+                                </span>
+                            </div>
+                            <div class="processed-image">
+                                <h4>Processed Image</h4>
+                                <img alt="Output image" class="output-image" [src]="imageSrc" alt="Processed Image" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>      
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h1>Upload and Search Video</h1>
+                      
+                    <input type="file" (change)="onFileSelected($event)" accept="video/*" />
+                    <button (click)="uploadVideo()">Upload Video</button>
+
+                    <div *ngIf="filename">
+                        <input type="text" [(ngModel)]="objectNames" placeholder="Enter object names separated by commas" />
+                        <button (click)="searchObjects()">Search Objects</button>
+                    </div>
+
+                    <div *ngIf="detectedFrames.length > 0">
+                        <h2>Detected Frames</h2>
+                        <ul>
+                        <li *ngFor="let frame of detectedFrames">
+                            Frame {{ frame }}
+                        </li>
+                        </ul>
+                    </div>
+
+                    <video id="videoPlayer" controls>
+                        <source *ngIf="filename" [src]="'http://127.0.0.1:5000/uploads/' + filename" type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
