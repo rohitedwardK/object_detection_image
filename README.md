@@ -1,4 +1,5 @@
 # ObjectDetectionUsingAI
+Object Detection in image using AI model "ssd-mobilenet-v2" from tensorflow
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.4.
 
