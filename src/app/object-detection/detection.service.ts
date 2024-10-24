@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -21,15 +22,31 @@ export class DetectionService {
     });
   }
 
-  uploadVideo(videoFile: File): Observable<any> {
+  uploadVideo(file: File): Observable<any> {
     const formData = new FormData();
-    formData.append('video', videoFile, videoFile.name);
-    return this.http.post(`${this.baseUrl}/upload`, formData);
-  }
+    formData.append('video', file);
 
-  detectObjects(filename: string, objectName: string): Observable<any> {
-    const body = { filename, object_name: objectName };
-    return this.http.post(`${this.baseUrl}/detect`, body);
+    // Send the video file to the Flask backend
+    return this.http.post(`${this.baseUrl}/uploadVideo`, formData, {
+      reportProgress: true,
+      observe: 'events'
+    }).pipe(
+      map(event => {
+        switch (event.type) {
+          case HttpEventType.UploadProgress:
+            // Compute and return the upload progress
+            const progress = Math.round((100 * event.loaded) / event.total);
+            return { status: 'progress', progress: progress };
+
+          case HttpEventType.Response:
+            // Return the detected objects once the upload is complete
+            return { status: 'done', body: event.body };
+
+          default:
+            return `Unhandled event: ${event.type}`;
+        }
+      })
+    );
   }
 }
 
